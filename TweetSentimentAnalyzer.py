@@ -25,7 +25,7 @@ def processTweet(tweet):
     return tweet
 
 #Read the tweets and process it
-file = open('/home/kunj/Desktop/training data/sampletweets.txt', 'r')
+file = open('sampletweets.txt', 'r')
 line = file.readline()
 
 while line:
@@ -51,7 +51,7 @@ def getStopWordList(stopWordListFileName):
     stopWords.append('AT_USER')
     stopWords.append('URL')
 
-    file = open('/home/kunj/Desktop/training data/stopWords.txt', 'r')
+    file = open('stopWords.txt', 'r')
     line = file.readline()
     while line:
         word = line.strip()
@@ -82,11 +82,11 @@ def getFeatureVector(tweet):
 #end
 
 #Read the tweets one by one and process it
-file = open('/home/kunj/Desktop/training data/sampletweets.txt', 'r')
+file = open('sampletweets.txt', 'r')
 line = file.readline()
 
-st = open('/home/kunj/Desktop/training data/stopWords.txt', 'r')
-stopWords = getStopWordList('/home/kunj/Desktop/training data/stopWords.txt')
+st = open('stopWords.txt', 'r')
+stopWords = getStopWordList('stopWords.txt')
 
 #create featureList and featureVector
 featureList = []
@@ -109,7 +109,7 @@ def ExtractSentiment(pattern, text):
         sentiment.append(match.group())
 #end
 
-file = open('/home/kunj/Desktop/training data/SampleLabelledTweets.txt','r')
+file = open('SampleLabelledTweets.txt','r')
 line = file.readlines()
 for lines in line:    
     ExtractSentiment('negative', lines)
