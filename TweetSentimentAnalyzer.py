@@ -77,6 +77,9 @@ def getFeatureVector(tweet):
             featureVector.append(w.lower())
     return featureVector
 
+#create featurelist and featurevector
+featureList = []
+
 #Read the tweets one by one and process it
 file = open('/home/kunj/Desktop/training data/trainingdata.txt', 'r')
 line = file.readline()
@@ -84,16 +87,14 @@ line = file.readline()
 st = open('/home/kunj/Desktop/training data/stopWords.txt', 'r')
 stopWords = getStopWordList('/home/kunj/Desktop/training data/stopWords.txt')
 
-#create featurelist and featurevector
-featureList = []
-
 while line:
     processedTweet = processTweet(line)
+    print processedTweet
     featureVector = getFeatureVector(processedTweet)
     featureList = featureList + featureVector
     line = file.readline()
 file.close()
-
+"""
 sentiment = []
 tweet = []
 tweets = []
@@ -144,3 +145,4 @@ NBClassifier = nltk.NaiveBayesClassifier.train(training_set)
 testTweet = str((' ').join(sys.argv[1:]))
 processedTestTweet = processTweet(testTweet)
 print NBClassifier.classify(extract_features(getFeatureVector(processedTestTweet)))
+"""
