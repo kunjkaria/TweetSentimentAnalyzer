@@ -25,22 +25,24 @@ def processTweet(tweet):
     return tweet
 
 #Read the tweets and process it
-file = open('/home/kunj/Desktop/training data/trainingdata.txt', 'r')
+file = open('/home/kunj/Desktop/training data/sampletweets.txt', 'r')
 line = file.readline()
 
 while line:
     processedTweet = processTweet(line)
-    #print processedTweet
     line = file.readline()
     
 file.close()
+#end
 
 stopWords = []
+
 #start replaceTwoOrMore
 def replaceTwoOrMore(s):
     #look for 2 or more repetitions of character and replace with the character itself
     pattern = re.compile(r"(.)\1{1,}", re.DOTALL)
     return pattern.sub(r"\1\1", s)
+#end
 
 #Get StopWord List
 def getStopWordList(stopWordListFileName):
@@ -49,7 +51,7 @@ def getStopWordList(stopWordListFileName):
     stopWords.append('AT_USER')
     stopWords.append('URL')
 
-    file = open(stopWordListFileName, 'r')
+    file = open('/home/kunj/Desktop/training data/stopWords.txt', 'r')
     line = file.readline()
     while line:
         word = line.strip()
@@ -57,6 +59,7 @@ def getStopWordList(stopWordListFileName):
         line = file.readline()
     file.close()
     return stopWords
+#end
 
 #Get Feature Vector
 def getFeatureVector(tweet):
@@ -76,56 +79,65 @@ def getFeatureVector(tweet):
         else:
             featureVector.append(w.lower())
     return featureVector
-
-#create featurelist and featurevector
-featureList = []
+#end
 
 #Read the tweets one by one and process it
-file = open('/home/kunj/Desktop/training data/trainingdata.txt', 'r')
+file = open('/home/kunj/Desktop/training data/sampletweets.txt', 'r')
 line = file.readline()
 
 st = open('/home/kunj/Desktop/training data/stopWords.txt', 'r')
 stopWords = getStopWordList('/home/kunj/Desktop/training data/stopWords.txt')
 
+#create featureList and featureVector
+featureList = []
+
 while line:
     processedTweet = processTweet(line)
-    print processedTweet
     featureVector = getFeatureVector(processedTweet)
     featureList = featureList + featureVector
     line = file.readline()
+#end loop
 file.close()
-"""
-sentiment = []
-tweet = []
-tweets = []
 
-def Find(pattern, text):
+#list of 'positive/negative' label on tweet/text from training data
+sentiment = [] 
+
+#Extracts 'positive/negative' sentiment from training data and stores in sentiment list
+def ExtractSentiment(pattern, text):
     match = re.search(pattern, text)
     if match:
         sentiment.append(match.group())
+#end
 
-def FindTweet(pattern, text):
+file = open('/home/kunj/Desktop/training data/SampleLabelledTweets.txt','r')
+line = file.readlines()
+for lines in line:    
+    ExtractSentiment('negative', lines)
+    ExtractSentiment('positive', lines)
+
+#list of tweet/text from training data
+listOfTweet = []
+        
+#Extracts tweet from training data and stores in tweet list
+def ExtractTweet(pattern, text):
     match = re.search(pattern, text)
     if match:
-        tweet.append(match.group())
-
-file = open('/home/kunj/Desktop/training data/sampleTweets.txt','r')
-line = file.readlines()
-
-for lines in line:    
-    Find('negative', lines)
-    Find('positive', lines)
+        listOfTweet.append(match.group())
+#end
 
 for lines in line:
-    FindTweet('\s+.*', lines)
+    ExtractTweet('\s+.*', lines)
 
-for i in range(9):
+#"Tweets" Variable
+tweets = []
+
+for i in range(1000):
     sentiment1 = sentiment[i]
-    tweet1 = tweet[i]
+    tweet1 = listOfTweet[i]
     processedTweet = processTweet(tweet1)
     featureVector = getFeatureVector(processedTweet)
     tweets.append((featureVector, sentiment1));
-      
+
 #start extract_features
 def extract_features(tweet):
     tweet_words = set(tweet)
@@ -135,7 +147,7 @@ def extract_features(tweet):
     return features
 #end
 
-# Extract feature vector for all tweets in one shote
+# Extract feature vector for all tweets in one shot
 training_set = nltk.classify.util.apply_features(extract_features, tweets)
 
 # Train the classifier
@@ -145,4 +157,3 @@ NBClassifier = nltk.NaiveBayesClassifier.train(training_set)
 testTweet = str((' ').join(sys.argv[1:]))
 processedTestTweet = processTweet(testTweet)
 print NBClassifier.classify(extract_features(getFeatureVector(processedTestTweet)))
-"""
