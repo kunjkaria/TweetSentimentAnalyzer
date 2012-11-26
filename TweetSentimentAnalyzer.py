@@ -62,7 +62,7 @@ def getStopWordList(stopWordListFileName):
 #end
 
 #Get Feature Vector
-def getFeatureVector(tweet):
+def getFeatureVector(tweet, stopWords):
     featureVector = []
     #split tweet into words
     words = tweet.split()
@@ -82,20 +82,21 @@ def getFeatureVector(tweet):
 #end
 
 #Read the tweets one by one and process it
-file = open('sampletweets.txt', 'r')
-line = file.readline()
+file1 = open('sampletweets.txt', 'r')
+line = file1.readlines()
 
 st = open('stopWords.txt', 'r')
 stopWords = getStopWordList('stopWords.txt')
+st.close()
 
 #create featureList and featureVector
 featureList = []
 
-while line:
-    processedTweet = processTweet(line)
-    featureVector = getFeatureVector(processedTweet)
+for text in line:
+    processedTweet = processTweet(text)
+    featureVector = getFeatureVector(processedTweet, stopWords)
     featureList = featureList + featureVector
-    line = file.readline()
+    #line = file1.readline()
 #end loop
 file.close()
 
@@ -135,7 +136,7 @@ for i in range(1000):
     sentiment1 = sentiment[i]
     tweet1 = listOfTweet[i]
     processedTweet = processTweet(tweet1)
-    featureVector = getFeatureVector(processedTweet)
+    featureVector = getFeatureVector(processedTweet, stopWords)
     tweets.append((featureVector, sentiment1));
 
 #start extract_features
@@ -153,7 +154,7 @@ training_set = nltk.classify.util.apply_features(extract_features, tweets)
 # Train the classifier
 NBClassifier = nltk.NaiveBayesClassifier.train(training_set)
 
-# In terminal type python tsa.py hello world
+# In terminal type python TweetSentimentAnalyzer.py hello world
 testTweet = str((' ').join(sys.argv[1:]))
 processedTestTweet = processTweet(testTweet)
-print NBClassifier.classify(extract_features(getFeatureVector(processedTestTweet)))
+print NBClassifier.classify(extract_features(getFeatureVector(processedTestTweet, stopWords)))
