@@ -132,7 +132,7 @@ for lines in line:
 #"Tweets" Variable
 tweets = []
 
-for i in range(1000):
+for i in range(1998):
     sentiment1 = sentiment[i]
     tweet1 = listOfTweet[i]
     processedTweet = processTweet(tweet1)
